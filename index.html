@@ -1,0 +1,141 @@
+<html>
+    <head>
+        <title>INTE2401-DiffieHellmen</title>
+        <!-- Load BigInteger Library -->
+        <script src="biginteger.js"></script>
+    </head>
+    
+    <body>
+        <!-- Heading -->
+        <h1>Cloud Security, Assignment 2, Question 4</h1>
+        <h2>Daniel Viglietti (s3844180)</h3>
+        <hr>
+        
+        <!-- Step 1: Generate two random 160 bit numbers (A and B)-->
+        <h3>1) Generate two 160 bit random numbers (A, B)</h2>
+
+        <button type="button" onclick="generate_random_number()">generate random number</button>
+        <br><br>
+
+        <!-- Output A -->
+        BigInt Decimal (A): <div id="outputA"></div>
+
+        <br><br>
+
+        <!-- Output B -->
+        BigInt Decimal (B): <div id="outputB"></div>
+
+        <!-- Step 2: Modulo Exponent Calculations (a and b) -->
+        <h3>2) Modulo Exponent Calculations (a and b)</h3>
+
+        <button type="button" onclick="modExponentCalc()">mod calc</button>
+        <br><br>
+
+        <!-- a -->
+        a: <div id="modA"></div>
+
+        <br><br>
+
+        <!-- b -->
+        b: <div id="modB"></div>
+
+        <!-- Step 3: Outputs and Secret Key -->
+        <h3>3) Outputs (a, g^a) (b, g^b) and Secret Key (g^ab)</h3>
+
+        <button type="button" onclick="outputs()">output calc</button>
+        <br><br>
+
+        <!-- (a, g^a) -->
+        Alice's Key: (a, g^a) = <div id="ga"></div>
+
+        <br><br>
+
+        <!-- (b, g^b) -->
+        Bob's Key: (b, g^b) = <div id="gb"></div>
+
+        <br><br>
+
+        <!-- (Secret Key g^ab) -->
+        Secret Key: (g^ab) = <div id="gab"></div>
+
+        <!-- JS Code -->
+        <script type="text/javascript">
+            var random_numberA = "";
+            var random_numberB = ""
+            var a = "";
+            var b = "";
+            var p = "";
+            var g = "";
+
+            // Keys
+            var aliceKey = "";
+            var bobKey = "";
+            var secretKey = "";
+
+            // 1) Generate A and B random 160 bit numbers
+	        function generate_random_number() {
+		        // display output on the page
+                document.getElementById('outputA').innerHTML = random_bigIntA();
+                document.getElementById('outputB').innerHTML = random_bigIntB();
+	        }
+            
+            function random_bigIntA() {	
+                // generate random bit 160 times
+    	        for (i = 0; i < 160; i++) {
+                    random_numberA += Math.floor(Math.random() * 2);
+                }
+    	        // return Decimal bigInt
+                return bigInt(random_numberA,2);
+            }
+
+            function random_bigIntB() {	
+                // generate random bit 160 times
+    	        for (i = 0; i < 160; i++) {
+                    random_numberB += Math.floor(Math.random() * 2);
+                }
+    	        // return Decimal bigInt
+                return bigInt(random_numberB,2);
+            }
+
+            // 2) Modulo Exponent Calculations
+            function modExponentCalc() {
+                // P and G values
+                p = "178011905478542266528237562450159990145232156369120674273274450314442865788737020770612695252123463079567156784778466449970650770920727857050009668388144034129745221171818506047231150039301079959358067395348717066319802262019714966524135060945913707594956514672855690606794135837542707371727429551343320695239";
+                p = bigInt(p);
+                g = "174068207532402095185811980123523436538604490794561350978495831040599953488455823147851597408940950725307797094915759492368300574252438761037084473467180148876118103083043754985190983472601550494691329488083395492313850000361646482644608492304078721818959999056496097769368017749273708962006689187956744210730";
+                g = bigInt(g);
+
+                // a = g^A mod p
+                a = g.modPow(bigInt(random_numberA), p);
+                document.getElementById('modA').innerHTML = a;
+
+                // b = g^B mod p
+                b = g.modPow(bigInt(random_numberB), p);
+                document.getElementById('modB').innerHTML = b;
+            }
+
+            // 3) Outputs and Secret Key
+            function outputs() {
+                // We assume they've already exchanged their random values, a and b.
+                // (a, g^a) - Alice's key
+                aliceKey = bigInt();
+                aliceKey = (b.modPow(random_numberA, p));
+                document.getElementById('ga').innerHTML = '( ' + a.toString() + ', ' + aliceKey.toString(); + ')';
+
+                // (b, g^b) - Bob's key
+                bobKey = bigInt();
+                bobKey = bigInt(a.modPow(random_numberB, p));
+                document.getElementById('gb').innerHTML = '( ' + b.toString() + ', ' + bobKey.toString(); + ')';
+
+                // (Secret Key g^ab) - Shared secret key
+                if (bobKey = aliceKey) {
+                    document.getElementById('gab').innerHTML = bobKey.toString();
+                }
+                else {
+                    document.getElementById('gab').innerHTML = 'Secret Key not found';
+                }
+                
+            }
+        </script>
+    </body>
+</html>
